@@ -5,6 +5,6 @@ import (
 	"github.com/santhosh-tekuri/jsonschema/v5"
 )
 
-func SeedHook(s *jsonschema.Schema) api.Hook {
-	return &hook{s: s}
+func SeedCallbacks(schema *jsonschema.Schema) api.Callbacks {
+	return &callbacks{schema: schema}
 }
