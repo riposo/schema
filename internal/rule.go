@@ -3,7 +3,9 @@ package internal
 import (
 	"context"
 	"errors"
+	"fmt"
 
+	"github.com/bmatcuk/doublestar/v4"
 	"github.com/riposo/riposo/pkg/api"
 	"github.com/riposo/riposo/pkg/riposo"
 	"github.com/riposo/riposo/pkg/rule"
@@ -12,7 +14,7 @@ import (
 	_ "github.com/santhosh-tekuri/jsonschema/v5/httploader"
 )
 
-var errNoPath = errors.New("configuration must specify a path")
+var errNoPath = errors.New("configuration must specify at least one path pattern")
 
 // Config contains the configuration for the rule.
 type Config struct {
@@ -31,16 +33,22 @@ func New(c *Config) (rule.Rule, error) {
 		return nil, errNoPath
 	}
 
-	return &loader{paths: c.Path, schema: schema}, nil
+	for _, path := range c.Path {
+		if !doublestar.ValidatePathPattern(path) {
+			return nil, fmt.Errorf("configuration contains an invalid path pattern: %q", path)
+		}
+	}
+
+	return &loader{globs: c.Path, schema: schema}, nil
 }
 
 type loader struct {
 	schema *jsonschema.Schema
-	paths  []string
+	globs  []string
 }
 
 func (l *loader) Init(ctx context.Context, rts *api.Routes, _ riposo.Helpers) error {
-	rts.Callbacks(l.paths, &callbacks{schema: l.schema})
+	rts.Callbacks(&callbacks{globs: l.globs, schema: l.schema})
 	return nil
 }
 
