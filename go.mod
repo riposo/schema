@@ -3,7 +3,7 @@ module github.com/riposo/schema
 go 1.17
 
 require (
-	github.com/riposo/riposo v0.1.1-0.20220210120749-32f9e20a32df
+	github.com/riposo/riposo v0.1.1-0.20220210133401-028990bec795
 	github.com/santhosh-tekuri/jsonschema/v5 v5.0.0
 	github.com/tidwall/gjson v1.13.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
