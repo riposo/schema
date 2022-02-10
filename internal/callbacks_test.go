@@ -8,7 +8,7 @@ import (
 	"github.com/santhosh-tekuri/jsonschema/v5"
 )
 
-func TestHook(t *testing.T) {
+func TestCallbacks(t *testing.T) {
 	js, err := jsonschema.CompileString("person.json", `{
 		"$id": "mock:///person.json",
 		"$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -24,24 +24,24 @@ func TestHook(t *testing.T) {
 		t.Fatalf("expected no error, got %v", err)
 	}
 
-	hook := internal.SeedHook(js)
+	callbacks := internal.SeedCallbacks(js)
 
-	t.Run("BeforeCreate", func(t *testing.T) {
-		err := hook.BeforeCreate(nil, "", &schema.Resource{
+	t.Run("OnCreate", func(t *testing.T) {
+		err := callbacks.OnCreate(nil, "").BeforeCreate(&schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{}`)},
 		})
 		if exp := `data in body: '' does not validate with mock:///person.json#/required: missing properties: 'firstName', 'lastName'`; exp != err.Error() {
 			t.Fatalf("expected %v, got %v", exp, err)
 		}
 
-		err = hook.BeforeCreate(nil, "", &schema.Resource{
+		err = callbacks.OnCreate(nil, "").BeforeCreate(&schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{ "firstName": "J", "lastName": "Doe" }`)},
 		})
 		if exp := `data in body: '/firstName' does not validate with mock:///person.json#/properties/firstName/minLength: length must be >= 3, but got 1`; exp != err.Error() {
 			t.Fatalf("expected %v, got %v", exp, err)
 		}
 
-		err = hook.BeforeCreate(nil, "", &schema.Resource{
+		err = callbacks.OnCreate(nil, "").BeforeCreate(&schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{ "firstName": "Jane", "lastName": "Doe" }`)},
 		})
 		if err != nil {
@@ -49,8 +49,8 @@ func TestHook(t *testing.T) {
 		}
 	})
 
-	t.Run("BeforeUpdate", func(t *testing.T) {
-		err := hook.BeforeUpdate(nil, "", nil, &schema.Resource{
+	t.Run("OnUpdate", func(t *testing.T) {
+		err := callbacks.OnUpdate(nil, "").BeforeUpdate(nil, &schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{ "firstName": "J", "lastName": "Doe" }`)},
 		})
 		if exp := `data in body: '/firstName' does not validate with mock:///person.json#/properties/firstName/minLength: length must be >= 3, but got 1`; exp != err.Error() {
@@ -58,16 +58,16 @@ func TestHook(t *testing.T) {
 		}
 	})
 
-	t.Run("BeforePatch", func(t *testing.T) {
+	t.Run("OnPatch", func(t *testing.T) {
 		exst := &schema.Object{Extra: []byte(`{ "firstName": "Jane", "lastName": "Doe" }`)}
-		err := hook.BeforePatch(nil, "", exst, &schema.Resource{
+		err := callbacks.OnPatch(nil, "").BeforePatch(exst, &schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{ "firstName": "Alice" }`)},
 		})
 		if err != nil {
 			t.Fatalf("expected no error, got %v", err)
 		}
 
-		err = hook.BeforePatch(nil, "", exst, &schema.Resource{
+		err = callbacks.OnPatch(nil, "").BeforePatch(exst, &schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{ "firstName": "J" }`)},
 		})
 		if exp := `data in body: '/firstName' does not validate with mock:///person.json#/properties/firstName/minLength: length must be >= 3, but got 1`; exp != err.Error() {

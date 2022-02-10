@@ -40,7 +40,7 @@ type loader struct {
 }
 
 func (l *loader) Init(ctx context.Context, rts *api.Routes, _ riposo.Helpers) error {
-	rts.Hook(l.paths, &hook{s: l.schema})
+	rts.Callbacks(l.paths, &callbacks{schema: l.schema})
 	return nil
 }
 
