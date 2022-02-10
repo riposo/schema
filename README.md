@@ -9,7 +9,7 @@ schema.
 ## Configuration
 
 The configure, add `type: schema` rules to your configuration. Schema rules must
-include a `schema` URL and a `path` array.
+include a `schema` URL and a `path` glob array.
 
 ```yaml
 rules:

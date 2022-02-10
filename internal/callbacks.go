@@ -13,7 +13,12 @@ import (
 type callbacks struct {
 	api.NoopCallbacks
 
+	globs  []string
 	schema *jsonschema.Schema
+}
+
+func (cc *callbacks) Match(p riposo.Path) bool {
+	return p.Match(cc.globs...)
 }
 
 func (cc *callbacks) OnCreate(_ *api.Txn, _ riposo.Path) api.CreateCallback { return cc }
