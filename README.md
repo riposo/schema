@@ -15,8 +15,7 @@ include a `schema` URL and a `path` glob array.
 rules:
   - type: schema
     schema: "https://example.com/person.schema.json"
-    path:
-      - "/buckets/*/collections/people/records/*"
+    path: "/buckets/*/collections/people/records/*"
   - type: schema
     schema: "file:///tmp/geographical-location.schema.json"
     path:
