@@ -6,5 +6,5 @@ import (
 )
 
 func SeedCallbacks(schema *jsonschema.Schema) api.Callbacks {
-	return &callbacks{schema: schema}
+	return &callbacks{globs: []string{"**"}, schema: schema}
 }
