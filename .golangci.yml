@@ -1,0 +1,4 @@
+linters-settings:
+  errcheck:
+    exclude-functions:
+      - (*github.com/riposo/riposo/pkg/api.Txn).Abort
