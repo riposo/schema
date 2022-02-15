@@ -23,8 +23,8 @@ github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+
 github.com/lib/pq v1.10.4/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
-github.com/riposo/riposo v0.1.1-0.20220210144547-c3359095fe98 h1:aS9/lUJkoCN4FuZ8rtklAzuM20YKWziu4uyIsO+hDnM=
-github.com/riposo/riposo v0.1.1-0.20220210144547-c3359095fe98/go.mod h1:srhin+xLoixnItV69C15Pre9JJ/QmFoQSzl/7e7CQDk=
+github.com/riposo/riposo v0.1.1-0.20220215142435-e680adcab55c h1:mfJI+IxCV67W3AlKo7Ta0PCw4EAec5DafKw3hiADm+8=
+github.com/riposo/riposo v0.1.1-0.20220215142435-e680adcab55c/go.mod h1:srhin+xLoixnItV69C15Pre9JJ/QmFoQSzl/7e7CQDk=
 github.com/santhosh-tekuri/jsonschema/v5 v5.0.0 h1:TToq11gyfNlrMFZiYujSekIsPd9AmsA2Bj/iv+s4JHE=
 github.com/santhosh-tekuri/jsonschema/v5 v5.0.0/go.mod h1:FKdcjfQW6rpZSnxxUvEA5H/cDPdvJ/SZJQLWWXWGrZ0=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
