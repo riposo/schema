@@ -29,7 +29,7 @@ func TestCallbacks(t *testing.T) {
 
 	act := api.NewActions(api.DefaultModel{}, []api.Callbacks{internal.SeedCallbacks(js)})
 	txn := mock.Txn()
-	defer txn.Abort()
+	defer txn.Rollback()
 
 	t.Run("Create", func(t *testing.T) {
 		err = act.Create(txn, "/buckets/foo/people/*", &schema.Resource{
