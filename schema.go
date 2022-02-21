@@ -8,12 +8,16 @@ import (
 )
 
 func init() {
-	rule.Register("schema", func(n *yaml.Node) (rule.Rule, error) {
-		var cfg internal.Config
-		if err := n.Decode(&cfg); err != nil {
-			return nil, err
+	rule.Register("schema", func(nodes []*yaml.Node) (rule.Set, error) {
+		cc := make([]*internal.Config, 0, len(nodes))
+		for _, n := range nodes {
+			c := new(internal.Config)
+			if err := n.Decode(c); err != nil {
+				return nil, err
+			}
+			cc = append(cc, c)
 		}
-		return internal.New(&cfg)
+		return internal.New(cc)
 	})
 
 	plugin.Register(plugin.New(
