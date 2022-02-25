@@ -71,10 +71,10 @@ func TestCallbacks(t *testing.T) {
 		txn := mock.Txn()
 		defer txn.Rollback()
 
-		path, handle := seedForUpdate(t, act, txn)
+		hs := seedForUpdate(t, act, txn)
 
 		// accepts valid
-		res, err := act.Update(txn, path, handle, &schema.Resource{
+		res, err := act.Update(txn, hs, &schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{"firstName":"Alice","lastName":"Glass"}`)},
 		})
 		if err != nil {
@@ -84,7 +84,7 @@ func TestCallbacks(t *testing.T) {
 		}
 
 		// validates
-		_, err = act.Update(txn, path, handle, &schema.Resource{
+		_, err = act.Update(txn, hs, &schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{"firstName":"J","lastName":"Doe"}`)},
 		})
 		if exp := `data in body: '/firstName' does not validate with mock:///person.json#/properties/firstName/minLength: length must be >= 3, but got 1`; exp != err.Error() {
@@ -96,10 +96,10 @@ func TestCallbacks(t *testing.T) {
 		txn := mock.Txn()
 		defer txn.Rollback()
 
-		path, handle := seedForUpdate(t, act, txn)
+		hs := seedForUpdate(t, act, txn)
 
 		// accepts valid
-		res, err := act.Patch(txn, path, handle, &schema.Resource{
+		res, err := act.Patch(txn, hs, &schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{"firstName":"Alice"}`)},
 		})
 		if err != nil {
@@ -109,7 +109,7 @@ func TestCallbacks(t *testing.T) {
 		}
 
 		// validates
-		_, err = act.Patch(txn, path, handle, &schema.Resource{
+		_, err = act.Patch(txn, hs, &schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{"firstName":"J"}`)},
 		})
 		if exp := `data in body: '/firstName' does not validate with mock:///person.json#/properties/firstName/minLength: length must be >= 3, but got 1`; exp != err.Error() {
@@ -118,7 +118,7 @@ func TestCallbacks(t *testing.T) {
 	})
 }
 
-func seedForUpdate(t *testing.T, act api.Actions, txn *api.Txn) (riposo.Path, storage.UpdateHandle) {
+func seedForUpdate(t *testing.T, act api.Actions, txn *api.Txn) storage.UpdateHandle {
 	t.Helper()
 
 	res := &schema.Resource{
@@ -128,10 +128,9 @@ func seedForUpdate(t *testing.T, act api.Actions, txn *api.Txn) (riposo.Path, st
 		t.Fatalf("expected no error, got %v", err)
 	}
 
-	path := riposo.Path("/buckets/foo/people/" + res.Data.ID)
-	handle, err := txn.Store.GetForUpdate(path)
+	hs, err := txn.Store.GetForUpdate(riposo.Path("/buckets/foo/people/" + res.Data.ID))
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
-	return path, handle
+	return hs
 }
