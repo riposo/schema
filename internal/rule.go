@@ -8,7 +8,7 @@ import (
 	"github.com/riposo/riposo/pkg/rule"
 
 	"github.com/santhosh-tekuri/jsonschema/v5"
-	_ "github.com/santhosh-tekuri/jsonschema/v5/httploader"
+	_ "github.com/santhosh-tekuri/jsonschema/v5/httploader" // use http loader
 )
 
 type ruleSet []constraint

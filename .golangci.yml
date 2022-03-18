@@ -1,3 +1,43 @@
+linters:
+  enable-all: true
+  disable:
+    - containedctx
+    - contextcheck
+    - cyclop
+    - dupl
+    - errname
+    - exhaustive
+    - exhaustivestruct
+    - forcetypeassert
+    - funlen
+    - gci
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - godox
+    - goerr113
+    - gofumpt
+    - golint
+    - gomnd
+    - interfacer
+    - ireturn
+    - lll
+    - maligned
+    - nakedret
+    - nlreturn
+    - paralleltest
+    - scopelint
+    - tagliatelle
+    - varnamelen
+    - wrapcheck
+    - wsl
+issues:
+  exclude-rules:
+    - path: 'ext_test\.go'
+      linters:
+        - testpackage
 linters-settings:
   errcheck:
     exclude-functions:
