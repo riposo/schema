@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/riposo/riposo/pkg/api"
-	"github.com/riposo/riposo/pkg/conn/storage"
 	"github.com/riposo/riposo/pkg/mock"
 	"github.com/riposo/riposo/pkg/riposo"
 	"github.com/riposo/riposo/pkg/schema"
@@ -71,10 +70,10 @@ func TestCallbacks(t *testing.T) {
 		txn := mock.Txn()
 		defer txn.Rollback()
 
-		hs := seedForUpdate(t, act, txn)
+		path, obj := seedForUpdate(t, act, txn)
 
 		// accepts valid
-		res, err := act.Update(txn, hs, &schema.Resource{
+		res, err := act.Update(txn, path, obj, &schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{"firstName":"Alice","lastName":"Glass"}`)},
 		})
 		if err != nil {
@@ -84,7 +83,7 @@ func TestCallbacks(t *testing.T) {
 		}
 
 		// validates
-		_, err = act.Update(txn, hs, &schema.Resource{
+		_, err = act.Update(txn, path, obj, &schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{"firstName":"J","lastName":"Doe"}`)},
 		})
 		if exp := `data in body: '/firstName' does not validate with mock:///person.json#/properties/firstName/minLength: length must be >= 3, but got 1`; exp != err.Error() {
@@ -96,10 +95,10 @@ func TestCallbacks(t *testing.T) {
 		txn := mock.Txn()
 		defer txn.Rollback()
 
-		hs := seedForUpdate(t, act, txn)
+		path, obj := seedForUpdate(t, act, txn)
 
 		// accepts valid
-		res, err := act.Patch(txn, hs, &schema.Resource{
+		res, err := act.Patch(txn, path, obj, &schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{"firstName":"Alice"}`)},
 		})
 		if err != nil {
@@ -109,7 +108,7 @@ func TestCallbacks(t *testing.T) {
 		}
 
 		// validates
-		_, err = act.Patch(txn, hs, &schema.Resource{
+		_, err = act.Patch(txn, path, obj, &schema.Resource{
 			Data: &schema.Object{Extra: []byte(`{"firstName":"J"}`)},
 		})
 		if exp := `data in body: '/firstName' does not validate with mock:///person.json#/properties/firstName/minLength: length must be >= 3, but got 1`; exp != err.Error() {
@@ -118,7 +117,7 @@ func TestCallbacks(t *testing.T) {
 	})
 }
 
-func seedForUpdate(t *testing.T, act api.Actions, txn *api.Txn) storage.UpdateHandle {
+func seedForUpdate(t *testing.T, act api.Actions, txn *api.Txn) (riposo.Path, *schema.Object) {
 	t.Helper()
 
 	res := &schema.Resource{
@@ -128,9 +127,10 @@ func seedForUpdate(t *testing.T, act api.Actions, txn *api.Txn) storage.UpdateHa
 		t.Fatalf("expected no error, got %v", err)
 	}
 
-	hs, err := txn.Store.GetForUpdate(riposo.Path("/buckets/foo/people/" + res.Data.ID))
+	path := riposo.Path("/buckets/foo/people/" + res.Data.ID)
+	obj, err := txn.Store.GetForUpdate(path)
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
-	return hs
+	return path, obj
 }

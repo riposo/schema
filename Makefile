@@ -1,4 +1,4 @@
-default: test
+default: test lint
 
 test:
 	go test ./...

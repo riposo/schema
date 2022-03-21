@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/bmatcuk/doublestar/v4 v4.0.2
-	github.com/riposo/riposo v0.1.1-0.20220318124303-d2d9c4ffeb13
+	github.com/riposo/riposo v0.1.1-0.20220321112534-b11204387a08
 	github.com/santhosh-tekuri/jsonschema/v5 v5.0.0
 	github.com/tidwall/gjson v1.14.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
