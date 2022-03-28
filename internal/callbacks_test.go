@@ -128,7 +128,7 @@ func seedForUpdate(t *testing.T, act api.Actions, txn *api.Txn) (riposo.Path, *s
 	}
 
 	path := riposo.Path("/buckets/foo/people/" + res.Data.ID)
-	obj, err := txn.Store.GetForUpdate(path)
+	obj, err := txn.Store.Get(path, true)
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
